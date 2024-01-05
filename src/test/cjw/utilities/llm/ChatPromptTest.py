@@ -3,7 +3,7 @@ import itertools
 import json
 import unittest
 
-from cjw.utilities.ChatPrompt import ChatPrompt, Bookmark
+from cjw.utilities.llm.ChatPrompt import ChatPrompt, Bookmark
 
 
 class ChatPromptTest(unittest.TestCase):

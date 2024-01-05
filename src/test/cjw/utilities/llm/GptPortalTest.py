@@ -7,7 +7,7 @@ from unittest.mock import patch, AsyncMock
 
 import requests
 
-from cjw.utilities.GptPortal import GptPortal
+from cjw.utilities.llm.GptPortal import GptPortal
 
 
 class GptPortalTest(unittest.TestCase):
