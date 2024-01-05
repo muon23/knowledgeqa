@@ -16,5 +16,6 @@ Allowing one to ask questions to a set of existing knowledge base.
     - **indexer**: Indexing the known knowledge for the chatbot to retrieve
 
 - **src/test**: Contains the tests for the code
+  - **cjw/knowledgeqa/bots/Evaluate**: To evaluate the effectiveness of the answer.
 - **data**: Contains test data
 - **deployment**: Contains scripts for deployment
