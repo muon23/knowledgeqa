@@ -1,13 +1,11 @@
-from abc import ABC, abstractmethod
 from typing import List
 
+from cjw.knowledgeqa.indexer.Indexer import Indexer
 
-class Indexer(ABC):
 
-    @abstractmethod
+class PineconeIndexer(Indexer):
     async def add(self, data: List[dict], keyFields: List[str], idField: str = "_id"):
-        pass
+        ...
 
-    @abstractmethod
     async def query(self, query: str) -> dict:
-        pass
+        ...
