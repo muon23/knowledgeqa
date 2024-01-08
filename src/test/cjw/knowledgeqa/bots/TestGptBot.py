@@ -2,7 +2,7 @@ import asyncio
 import unittest
 
 from cjw.knowledgeqa.bots.GptBot import GptBot
-from cjw.knowledgeqa.indexer.MarqoIndexer import MarqoIndexer
+from cjw.knowledgeqa.indexers.MarqoIndexer import MarqoIndexer
 
 
 class TestGptBot(unittest.TestCase):

@@ -1,9 +1,16 @@
 from typing import List
 
-from cjw.knowledgeqa.indexer.Indexer import Indexer
+from cjw.knowledgeqa.indexers.Indexer import Indexer
 
 
 class PineconeIndexer(Indexer):
+    @classmethod
+    def new(cls, serverUrl: str, indexName: str, **kwargs) -> "PineconeIndexer":
+        ...
+
+    def __init__(self, serverUrl: str, indexName: str):
+        ...
+
     async def add(self, data: List[dict], keyFields: List[str], idField: str = "_id", **kwargs):
         ...
 

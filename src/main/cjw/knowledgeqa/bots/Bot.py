@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from cjw.knowledgeqa.bots.Answer import Answer
-from cjw.knowledgeqa.indexer.Indexer import Indexer
+from cjw.knowledgeqa.indexers.Indexer import Indexer
 
 
 class Bot(ABC):

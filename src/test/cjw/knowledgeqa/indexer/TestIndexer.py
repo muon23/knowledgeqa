@@ -3,8 +3,8 @@ import json
 import unittest
 from typing import List
 
-from cjw.knowledgeqa.indexer.Indexer import Indexer
-from cjw.knowledgeqa.indexer.MarqoIndexer import MarqoIndexer
+from cjw.knowledgeqa.indexers.Indexer import Indexer
+from cjw.knowledgeqa.indexers.MarqoIndexer import MarqoIndexer
 
 
 class TestIndexer(unittest.TestCase):

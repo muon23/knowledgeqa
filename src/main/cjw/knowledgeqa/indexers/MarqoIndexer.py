@@ -3,7 +3,7 @@ from uuid import uuid4
 
 import marqo
 
-from cjw.knowledgeqa.indexer.Indexer import Indexer
+from cjw.knowledgeqa.indexers.Indexer import Indexer
 
 
 class MarqoIndexer(Indexer):

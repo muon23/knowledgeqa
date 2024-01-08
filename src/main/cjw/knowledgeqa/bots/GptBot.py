@@ -19,6 +19,8 @@ class GptBot(Bot):
         "gpt4": "gpt-4",
     }
 
+    models = set(list(__MODEL_TRANSLATION.keys()) + list(__MODEL_TRANSLATION.values()))
+
     ___EXAMPLES = """
     For example:
     
