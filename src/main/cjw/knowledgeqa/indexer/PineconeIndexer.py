@@ -4,8 +4,18 @@ from cjw.knowledgeqa.indexer.Indexer import Indexer
 
 
 class PineconeIndexer(Indexer):
-    async def add(self, data: List[dict], keyFields: List[str], idField: str = "_id"):
+    async def add(self, data: List[dict], keyFields: List[str], idField: str = "_id", **kwargs):
         ...
 
-    async def query(self, query: str) -> dict:
+    async def search(self, query: str, top: int = 3, **kwargs) -> List[dict]:
         ...
+
+    async def get(self, ids: str | List[str]) -> List[dict]:
+        ...
+
+    async def delete(self, ids: str | List[str]):
+        ...
+
+    async def kill(self):
+        ...
+

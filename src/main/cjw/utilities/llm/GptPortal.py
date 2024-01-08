@@ -88,24 +88,24 @@ class GptPortal:
                 return await function(**request)
 
             except (
-                openai.Timeout,
-                openai.APIError,
-                openai.APIConnectionError,
-                openai.InternalServerError,
+                openai.error.Timeout,
+                openai.error.APIError,
+                openai.error.APIConnectionError,
+                openai.error.ServiceUnavailableError,
             ) as e:
                 self.logger.warning(f"Server connection error: {e}. Retry {tries + 1}")
 
-            except openai.AuthenticationError as e:
+            except openai.error.AuthenticationError as e:
                 message = f"Authentication failed: Unauthorized. {e}"
                 self.logger.error(message)
                 raise self.AuthenticationError(f"{message} (incorrect or missing API keys).")
 
-            except openai.BadRequestError as e:
+            except openai.error.InvalidRequestError as e:
                 message = f"Too many tokens: {e}"
                 self.logger.info(message)
                 raise self.TooManyTokensError(message)
 
-            except openai.RateLimitError as e:
+            except openai.error.RateLimitError as e:
                 self.logger.warning(f"OpenAI rate exceeds limit. Slowing down retries. {e}")
                 time.sleep(self.__SLOW_RETRY_INTERVAL - self.__RETRY_INTERVAL)
 
