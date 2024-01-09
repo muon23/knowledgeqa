@@ -14,6 +14,6 @@ class Evaluator(ABC):
         return self
 
     @abstractmethod
-    async def evaluate(self, examples: int = 0, **kwargs) -> float:
+    async def evaluate(self, sampleSize: int = 0, **kwargs) -> float:
         pass
 

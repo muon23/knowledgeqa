@@ -7,7 +7,7 @@ from cjw.knowledgeqa.indexers.Indexer import Indexer
 from cjw.knowledgeqa.indexers.MarqoIndexer import MarqoIndexer
 
 
-class TestIndexer(unittest.TestCase):
+class IndexerTest(unittest.TestCase):
     TEST_DATA_DIR = "../../../../../data"
     TEST_DATA1 = f"{TEST_DATA_DIR}/simple.json"
     MARQO_SERVER = "http://localhost:8882"

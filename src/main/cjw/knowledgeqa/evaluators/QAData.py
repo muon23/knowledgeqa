@@ -30,5 +30,8 @@ class QAData:
         for _, row in self.data.iterrows():
             yield row
 
+    def getQuestions(self) -> List[str]:
+        return self.data["question"].to_list()
+
     def size(self) -> int:
         return len(self.data)

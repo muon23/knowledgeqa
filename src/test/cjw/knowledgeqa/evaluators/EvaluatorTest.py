@@ -5,12 +5,14 @@ import unittest
 from cjw.knowledgeqa import indexers, bots
 from cjw.knowledgeqa.bots import GptBot
 from cjw.knowledgeqa.bots.Bot import Bot
+from cjw.knowledgeqa.evaluators.ConsistencyEvaluator import ConsistencyEvaluator
 from cjw.knowledgeqa.evaluators.ProximityEvaluator import ProximityEvaluator
 from cjw.knowledgeqa.evaluators.QAData import QAData
 from cjw.knowledgeqa.indexers import Indexer
+from cjw.utilities.embedding.BertEmbedding import BertEmbedding
 
 
-class TestEvaluator(unittest.TestCase):
+class EvaluatorTest(unittest.TestCase):
     DATA_FILE = "../../../../../data/wikipedia_question_similar_answer.tsv"
     MARQO_SERVER = 'http://localhost:8882'
     TEST_INDEX_NAME = "wiki_test_qa"
@@ -36,6 +38,21 @@ class TestEvaluator(unittest.TestCase):
 
         loop.run_until_complete(evaluator.withData(self.data, self.index))
         score = loop.run_until_complete(evaluator.evaluate(sampleSize=5))
+
+        print(score)
+
+    def test_consistency(self):
+        logging.basicConfig(level=logging.DEBUG)
+        # ConsistencyEvaluator.logger.setLevel(logging.INFO)
+        # GptBot.logger.setLevel(logging.INFO)
+
+        loop = asyncio.get_event_loop()
+
+        questions = self.data.getQuestions()
+        bert = BertEmbedding("distilbert-multilingual-nli-stsb-quora-ranking")
+        evaluator = ConsistencyEvaluator(questions, bert).forBot(self.bot)
+
+        score = loop.run_until_complete(evaluator.evaluate(sampleSize=2))
 
         print(score)
 

@@ -5,7 +5,7 @@ from cjw.knowledgeqa.bots.GptBot import GptBot
 from cjw.knowledgeqa.indexers.MarqoIndexer import MarqoIndexer
 
 
-class TestGptBot(unittest.TestCase):
+class GptBotTest(unittest.TestCase):
     MARQO_SERVER = "http://localhost:8882"
     TEST_INDEX_NAME = "test_indexer"
 

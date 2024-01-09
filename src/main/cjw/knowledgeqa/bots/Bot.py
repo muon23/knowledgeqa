@@ -19,6 +19,6 @@ class Bot(ABC):
         return self
 
     @abstractmethod
-    async def ask(self, question: str, facts: dict = None, **kwargs) -> Answer:
+    async def ask(self, question: str, **kwargs) -> Answer:
         pass
 

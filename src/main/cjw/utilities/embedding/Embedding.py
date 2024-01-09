@@ -1,12 +1,15 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
-import torch
+import numpy as np
 
 
 class Embedding(ABC):
-    def __init__(self):
+
+    @abstractmethod
+    async def embed(self, text: str) -> Optional[np.ndarray]:
         pass
 
     @abstractmethod
-    async def embed(self, text: str) -> torch.Array:
+    async def embed1(self, text: str) -> Optional[np.ndarray]:
         pass
