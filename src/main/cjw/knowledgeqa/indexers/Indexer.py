@@ -30,3 +30,7 @@ class Indexer(ABC):
     @abstractmethod
     async def kill(self):
         pass
+
+    @abstractmethod
+    async def size(self):
+        pass

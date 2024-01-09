@@ -15,13 +15,13 @@ class QAData:
         else:
             raise NotImplementedError(f"Data source type {type(dataSource)} not supported.")
 
-        self.data.rename(columns={"wikipedia_answer": "answer"})
+        self.data = self.data.rename(columns={"wikipedia_answer": "answer"})
 
         if "_id" not in self.data:
             self.data["_id"] = [str(i) for i in range(len(self.data))]
 
-    def to_dict(self):
-        self.data.to_dict('records')
+    def to_dict(self) -> List[dict]:
+        return self.data.to_dict('records')
 
     def sample(self, n: int = 1) -> "QAData":
         return QAData(self.data.sample(n=n))

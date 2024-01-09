@@ -1,24 +1,21 @@
 import re
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
 class Answer:
     content: str
-    citation: str | None
+    citations: List[str]
 
     @classmethod
     def of(cls, text: str) -> "Answer":
         pattern = r'\[([^\]]+)\]'
-        match = re.search(pattern, text)
+        citations = re.findall(pattern, text)
 
-        # Check if a match was found
-        if match:
-            citation = match.group(1)
-            cleaned = re.sub(pattern, '', text, count=1)
-            return Answer(cleaned.strip(), citation)
-        else:
-            # Return None if no match was found
-            return Answer(text.strip(), None)
+        cleaned = re.sub(pattern, '', text) if citations else text
+        return Answer(cleaned.strip(), citations)
 
+    def __str__(self) -> str:
+        return f"{self.content} [{','.join(self.citations)}]" if self.citations else self.content
 

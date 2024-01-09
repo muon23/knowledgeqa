@@ -69,3 +69,6 @@ class MarqoIndexer(Indexer):
         status = self.server.delete_index(self.indexName)
         return status
 
+    async def size(self):
+        stats = self.index.get_stats()
+        return stats['numberOfDocuments']

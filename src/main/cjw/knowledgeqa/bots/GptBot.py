@@ -106,11 +106,12 @@ class GptBot(Bot):
         numTokens = self.portal.estimateTokens(instruction)
 
         if self.indexer:
-            idField = self.indexerArgs.pop("idField", "_id")
-            contentFields = self.indexerArgs.pop("contentFields", ["text"])
-            maxTokens = self.indexerArgs.pop("maxTokens", self.DEFAULT_MAX_TOKENS)
+            searchArgs = self.indexerArgs.copy()
+            idField = searchArgs.pop("idField", "_id")
+            contentFields = searchArgs.pop("contentFields", ["text"])
+            maxTokens = searchArgs.pop("maxTokens", self.DEFAULT_MAX_TOKENS)
 
-            found = await self.indexer.search(question, **self.indexerArgs)
+            found = await self.indexer.search(question, **searchArgs)
 
             facts = dict()
             for f in found:
@@ -123,6 +124,7 @@ class GptBot(Bot):
                 facts[f[idField]] = content
 
             gatheredFacts = "\n\n".join([f"[{fid}]\n{facts[fid]}" for fid in facts])
+            self.logger.info(f"Considering facts:\n{gatheredFacts}")
             prompt.system(gatheredFacts, replace=False)
 
         prompt.user(question)
@@ -130,7 +132,10 @@ class GptBot(Bot):
         if "temperature" not in kwargs:
             kwargs["temperature"] = 0.7
 
+        self.logger.info(f"Question:\n{question}")
         responses = await self.portal.chatCompletion(prompt.messages, **kwargs)
+        self.logger.info(f"Answer:\n{responses['content']}")
+
         return Answer.of(responses["content"])
 
 
