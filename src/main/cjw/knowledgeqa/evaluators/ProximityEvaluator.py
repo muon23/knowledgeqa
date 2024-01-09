@@ -28,7 +28,7 @@ class ProximityEvaluator(Evaluator):
             await self.indexer.add(self.testSet.to_dict(), keyFields=["answer"])
         return self
 
-    async def evaluate(self, sampleSize: int = 0, **kwargs) -> float:
+    async def evaluate(self, sampleSize: int = 0, showFailedQuestions=False, **kwargs) -> float:
         if not self.bot:
             raise RuntimeError("Nothing to evaluate (need a bot)")
 
@@ -46,6 +46,8 @@ class ProximityEvaluator(Evaluator):
             self.logger.info(f"Answer: {answer}")
 
             if answer.citations[0] == "--":  # The bot doesn't know
+                if showFailedQuestions:
+                    print(f"Failed question: {question} ({answer})")
                 continue
 
             proximity = await self.indexer.search(answer.content, top=len(self.scores))
@@ -59,6 +61,8 @@ class ProximityEvaluator(Evaluator):
                 self.logger.info(f"Score = {score}")
                 positives += score
             except ValueError:
+                if showFailedQuestions:
+                    print(f"Failed question: {question} ({answer})")
                 pass    # Not found in proximity so no score
 
         if sampleSize == 0:
