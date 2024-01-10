@@ -15,39 +15,56 @@ class ConsistencyEvaluator(Evaluator):
 
     def __init__(self, sampleQuestions: List[str], embedding: Embedding):
         super().__init__()
-        self.sampleQuestions = sampleQuestions
-        self.embedding = embedding
+        self.__sampleQuestions = sampleQuestions
+        self.__embedding = embedding
 
     @classmethod
-    def similarity(cls, a: np.ndarray, b: np.ndarray) -> float:
+    def _similarity(cls, a: np.ndarray, b: np.ndarray) -> float:
+        # Calculate cosine similarity between two vectors
         return np.dot(a, b)/(np.linalg.norm(a)*np.linalg.norm(b))
 
     @classmethod
-    def pairwiseSimilarity(cls, vectors: np.ndarray) -> np.ndarray:
+    def _pairwiseSimilarity(cls, vectors: np.ndarray) -> np.ndarray:
+        # Calculate cosine similarities between each pair of multiple vectors
         pairs = np.stack(np.triu_indices(len(vectors), k=1), axis=1)
-        return np.array([cls.similarity(t[0], t[1]) for t in vectors[pairs]])
+        return np.array([cls._similarity(t[0], t[1]) for t in vectors[pairs]])
 
-    async def question2embedding(self, question: str) -> np.ndarray:
-        answer = await self.bot.ask(question)
+    async def _question2embedding(self, question: str) -> np.ndarray:
+        # Ask the bot a question, and then embed its answer
+        answer = await self._bot.ask(question)
         self.logger.info(f"Answer: {answer}")
-        return await self.embedding.embed(answer.content)
+        return await self.__embedding.embed(answer.content)
 
-    async def evaluate(self, sampleSize: int = 0, tries: int = 3, **kwargs) -> float:
-        if not self.bot:
+    async def evaluate(self, sampleSize: int = 0, tries: int = 3) -> float:
+        """Evaluate the :class:`Bot`
+
+        Args:
+            sampleSize (int): How many test cases to run through the bot.  Zero means running with all provided test data.
+            tries (int): Ask the same question this many times to the bot in order to check the consistency
+
+        Returns:
+            Performance score of the Bot
+        """
+        if not self._bot:
             raise RuntimeError("Nothing to evaluate (need a bot)")
 
-        if not self.embedding:
+        if not self.__embedding:
             raise RuntimeError("No embedding model provided")
 
-        questions = random.sample(self.sampleQuestions, sampleSize) if sampleSize else self.sampleQuestions
+        # Pick the questions
+        questions = random.sample(self.__sampleQuestions, sampleSize) if sampleSize else self.__sampleQuestions
 
         score = 0.0
         for q in questions:
-            embeddings = asyncio.gather(*[self.question2embedding(q) for _ in range(tries)])
-            similarity = self.pairwiseSimilarity(np.array(await embeddings))
+            # For each question, ask the bot many times in parallel, and gather all the results
+            embeddings = asyncio.gather(*[self._question2embedding(q) for _ in range(tries)])
+
+            # Get the pairwise similarities.  Then, take the mean as the score.
+            similarity = self._pairwiseSimilarity(np.array(await embeddings))
             score += np.mean(similarity)
 
+        # Calculate the final score
         if sampleSize == 0:
-            sampleSize = len(self.sampleQuestions)
+            sampleSize = len(self.__sampleQuestions)
 
         return score / sampleSize

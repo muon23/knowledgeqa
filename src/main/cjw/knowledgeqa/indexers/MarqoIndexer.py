@@ -8,7 +8,7 @@ from cjw.knowledgeqa.indexers.Indexer import Indexer
 
 class MarqoIndexer(Indexer):
     """Indexes the documents with Marqo"""
-    DEFAULT_BATCH_SIZE = 20
+    __DEFAULT_BATCH_SIZE = 20
 
     @classmethod
     def new(cls, serverUrl: str, indexName: str, **kwargs) -> "MarqoIndexer":
@@ -35,6 +35,15 @@ class MarqoIndexer(Indexer):
         return MarqoIndexer(serverUrl, indexName)
 
     def __init__(self, serverUrl: str, indexName: str):
+        """ Get an existing index
+
+        Args:
+            serverUrl (str): URL to the Marqo server
+            indexName (str): Name of the index
+
+        Raises:
+            Indexer.IndexNotFoundError
+        """
         self.indexName = indexName
         self.server = marqo.Client(serverUrl)
 
@@ -44,6 +53,8 @@ class MarqoIndexer(Indexer):
             raise Indexer.IndexNotFoundError(self.indexName)
 
     async def add(self, data: List[dict], keyFields: List[str], idField: str = None, **kwargs) -> dict:
+
+        # Make sure there is an ID field
         if not idField:
             for item in data:
                 if "_id" not in item:
@@ -53,11 +64,12 @@ class MarqoIndexer(Indexer):
             for item in data:
                 item["_id"] = item[idField]
 
+        # Add the documents
         status = self.index.add_documents(
             data,
             tensor_fields=keyFields,
             auto_refresh=True,
-            client_batch_size=self.DEFAULT_BATCH_SIZE,
+            client_batch_size=self.__DEFAULT_BATCH_SIZE,
             **kwargs
         )
         return status[0]

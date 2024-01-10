@@ -3,7 +3,6 @@ import logging
 import unittest
 
 from cjw.knowledgeqa import indexers, bots
-from cjw.knowledgeqa.bots import GptBot
 from cjw.knowledgeqa.bots.Bot import Bot
 from cjw.knowledgeqa.evaluators.ConsistencyEvaluator import ConsistencyEvaluator
 from cjw.knowledgeqa.evaluators.ProximityEvaluator import ProximityEvaluator
@@ -28,16 +27,16 @@ class EvaluatorTest(unittest.TestCase):
         self.bot = bots.bot("gpt4").withFacts(self.index, contentFields=["answer"], top=self.RAG_KNOWLEDGE)
 
     def test_proximity(self):
-        logging.basicConfig(level=logging.DEBUG)
-        ProximityEvaluator.logger.setLevel(logging.INFO)
-        GptBot.logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
+        # ProximityEvaluator.logger.setLevel(logging.INFO)
+        # GptBot.logger.setLevel(logging.INFO)
 
         loop = asyncio.get_event_loop()
 
         evaluator = ProximityEvaluator().forBot(self.bot)
 
         loop.run_until_complete(evaluator.withData(self.data, self.index))
-        score = loop.run_until_complete(evaluator.evaluate(sampleSize=5))
+        score = loop.run_until_complete(evaluator.evaluate(sampleSize=5, showFailedQuestions=True))
 
         print(score)
 
