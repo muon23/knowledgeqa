@@ -7,10 +7,25 @@ from cjw.knowledgeqa.indexers.Indexer import Indexer
 
 
 class MarqoIndexer(Indexer):
+    """Indexes the documents with Marqo"""
     DEFAULT_BATCH_SIZE = 20
 
     @classmethod
     def new(cls, serverUrl: str, indexName: str, **kwargs) -> "MarqoIndexer":
+        """ Creates a new index.
+
+        Args:
+            serverUrl (str): URL to the Marqo server
+            indexName (str): Name of the index
+            **kwargs: Arguments to Marqo index creation
+
+        Returns:
+            The new index in Marqo server
+
+        Raises:
+            Indexer.IndexExistError
+
+        """
         mq = marqo.Client(serverUrl)
         indices = [idx.index_name for idx in mq.get_indexes()["results"]]
         if indexName in indices:
@@ -28,7 +43,7 @@ class MarqoIndexer(Indexer):
         except marqo.errors.MarqoWebError:
             raise Indexer.IndexNotFoundError(self.indexName)
 
-    async def add(self, data: List[dict], keyFields: List[str], idField: str = None, **kwargs):
+    async def add(self, data: List[dict], keyFields: List[str], idField: str = None, **kwargs) -> dict:
         if not idField:
             for item in data:
                 if "_id" not in item:
@@ -58,17 +73,17 @@ class MarqoIndexer(Indexer):
         results = self.index.get_documents(document_ids=ids)
         return results["results"]
 
-    async def delete(self, ids: str | List[str]):
+    async def delete(self, ids: str | List[str]) -> dict:
         if isinstance(ids, str):
             ids = [ids]
 
         status = self.index.delete_documents(ids=ids)
         return status
 
-    async def kill(self):
+    async def kill(self) -> dict:
         status = self.server.delete_index(self.indexName)
         return status
 
-    async def size(self):
+    async def size(self) -> int:
         stats = self.index.get_stats()
         return stats['numberOfDocuments']

@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from cjw.knowledgeqa.evaluators.Evaluator import Evaluator
 from cjw.knowledgeqa.evaluators.QAData import QAData
@@ -14,8 +14,8 @@ class ProximityEvaluator(Evaluator):
 
     def __init__(self, scores: List[float] = None):
         super().__init__()
-        self.testSet: QAData | None = None
-        self.indexer: Indexer | None = None
+        self.testSet: Optional[QAData] = None
+        self.indexer: Optional[Indexer] = None
         self.scores: List[float] = scores if scores else self.__DEFAULT_SCORES
 
     async def withData(self, testSet: QAData, indexer: Indexer, refreshIndex=False) -> "ProximityEvaluator":
