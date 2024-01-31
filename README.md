@@ -27,6 +27,10 @@ or solely from within the scope of the given knowledge.
 - **demo_basic**: Demonstrate basic functionality of the bot.  
 - **demo_evaluator**: Demonstrate the "evaluators" that evaluate the performance of the bots.
 
+## Architecture
+
+![Architecture](docs/KnowledgeQAArchitecture.png)
+
 ## To-Dos
 
 Stuff not yet implemented:
