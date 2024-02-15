@@ -31,6 +31,22 @@ or solely from within the scope of the given knowledge.
 
 ![Architecture](docs/KnowledgeQAArchitecture.png)
 
+## Demos
+### Basic Functionality
+
+See the demonstration in this [Notebook](notebook/demo_basic.ipynb)
+
+![Indexing](docs/Demo1-1.png)
+![RAG](docs/Demo1-2.png)
+![Configurable Facts](docs/Demo1-3.png)
+
+### Model Evaluation
+
+See the demonstration in this [Notebook](notebook/demo_evaluation.ipynb)
+
+![With Golden Test Set](docs/Demo2-1.png)
+![Without Golden Test Set](docs/Demo2-2.png)
+
 ## To-Dos
 
 Stuff not yet implemented:
